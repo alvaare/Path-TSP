@@ -1,7 +1,7 @@
 #ifndef __GRAPH_HPP_INCLUDED__
 #define __GRAPH_HPP_INCLUDED__
 
-struct Graph {
+struct graph {
   int n;
-  int** edges;
+  int edges[n][n];
 };
