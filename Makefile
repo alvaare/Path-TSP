@@ -1,12 +1,26 @@
-SRC = $(*.cpp)
-OBJ = $(src:.cpp=.o)
-DEPS = $(*.hpp)
+TARGET := build/christofides
+EXEC := christofides
 
-CXX = g++
-CXXFLAGS = -Wall
+IDIR := include
+LDIR := lib
+BDIR := build
 
-%.o: %.c $(DEPS) $(CXX) -c -o $@ $< $(CXXFLAGS)
+SRCS := $(shell find $(LDIR) -type f -name *.cpp)
+OBJS := $(patsubst $(LDIR)/%,$(BDIR)/%,$(SRCS:.cpp=.o))
+INC := -I include
 
-christophides: $(OBJ) $(CXX) -o $@ $^ $(CXXFLAGS)
+CXX := g++
+CXXFLAGS := -g -Wall
 
-clean: rm -f $(OBJ) myprog
+all: $(OBJS)
+	@echo " Linking...";
+	$(CXX) $(CXXFLAGS) $(INC) $(OBJS) -o $(EXEC)
+
+$(BDIR)/%.o: $(LDIR)/%.cpp
+	@mkdir -p $(BDIR);
+	$(CXX) $(CXXFLAGS) $(INC) -c -o $@ $<
+
+.PHONY: clean
+clean:
+	@echo " Cleaning...";
+	$(RM) -r $(BDIR) $(EXEC)
