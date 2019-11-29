@@ -1,5 +1,5 @@
-TARGET := build/christofides
-EXEC := christofides
+TARGET := build/main
+EXEC := main
 
 IDIR := include
 LDIR := lib

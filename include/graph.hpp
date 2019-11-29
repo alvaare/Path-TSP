@@ -23,9 +23,9 @@ struct path {
   int* nodes;
   path(int n) {
     this->n = n;
-    nodes = new int*[n];
+    nodes = new int[n];
   }
-}
+};
 
 bool is_connex(graph);
 
