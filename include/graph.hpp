@@ -1,7 +1,6 @@
 #ifndef __GRAPH_HPP_INCLUDED__
 #define __GRAPH_HPP_INCLUDED__
 
-#include<vector>
 using namespace std;
 
 struct graph {
@@ -27,7 +26,17 @@ struct path {
   }
 };
 
-typedef vector< pair <int, int>> matching;
+struct matching {
+  int n;
+  int* pair;
+  matching(int n) {
+    this->n = n;
+    pair = new int[n];
+    for (int i=0; i<n; i++) {
+      this->pair[i] = -1;
+    }
+  }
+};
 
 bool is_connex(graph);
 
