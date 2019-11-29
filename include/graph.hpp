@@ -18,6 +18,15 @@ struct graph {
   }
 };
 
+struct path {
+  int n;
+  int* nodes;
+  path(int n) {
+    this->n = n;
+    nodes = new int*[n];
+  }
+}
+
 bool is_connex(graph);
 
 void print_graph(graph);
