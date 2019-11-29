@@ -29,6 +29,8 @@ struct path {
 
 bool is_connex(graph);
 
+int degree(graph, int);
+
 void print_graph(graph);
 
 #endif

@@ -34,3 +34,13 @@ void print_graph(graph G) {
   }
   cout << "\n";
 }
+
+int degree(graph G, int v) {
+  int deg = 0;
+  for (int i=0; i<G.n; i++) {
+    if (G.edges[v][i] > 0) {
+      deg++;
+    }
+  }
+  return deg;
+}
