@@ -39,9 +39,16 @@ path christofides(graph G, graph T, int s, int t) {
   path P(n);
 
   vector<int> O = nodes_uncomplete(T, s, t);
-
+  for (int i=0; i<(int)O.size(); i++) {
+    cout << O[i] << " ";
+  }
+  cout << "\n";
   graph S = induced_subgraph(G, O);
   print_graph(S);
+  matching M = perfect_matching(S);
+  for (int i=0; i<S.n; i++) {
+    cout << i << M.pair[i] << "\n";
+  }
 
   return P;
 };
