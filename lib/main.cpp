@@ -16,8 +16,4 @@ int main() {
 
   christofides(&G, &T, 0, 1);
 
-  matching M = perfect_matching(G);
-  for (int i=0; i<n; i++) {
-    cout << i << "->" << M.pair[i] << "\n";
-  }
 }

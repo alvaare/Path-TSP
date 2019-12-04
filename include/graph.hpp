@@ -44,4 +44,6 @@ int degree(graph*, int);
 
 void print_graph(graph*);
 
+void print_matching(matching*);
+
 #endif

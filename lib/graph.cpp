@@ -45,3 +45,9 @@ int degree(graph* G, int v) {
   }
   return deg;
 }
+
+void print_matching(matching* M) {
+  for (int i=0; i<M->n; i++) {
+    cout << i << "->" << M->pair[i] << "\n";
+  }
+}

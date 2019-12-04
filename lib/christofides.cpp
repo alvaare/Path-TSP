@@ -34,6 +34,16 @@ graph induced_subgraph(graph* G, vector<int> O) {
   return S;
 }
 
+graph union_tree_matching(graph* T, matching* M) {
+  int n=T->n;
+  graph G(n);
+  for (int i=0; i<n; i++)
+    for (int j=0; j<n; j++)
+      if (T->edges[i][j]>0 || M->pair[i]==j)
+        G.edges[i][j] = 1;
+  return G;
+}
+
 path christofides(graph* G, graph* T, int s, int t) {
   int n = G->n;
   path P(n);
@@ -46,9 +56,9 @@ path christofides(graph* G, graph* T, int s, int t) {
   graph S = induced_subgraph(G, O);
   print_graph(&S);
   matching M = perfect_matching(S);
-  for (int i=0; i<S.n; i++) {
-    cout << i << M.pair[i] << "\n";
-  }
+  print_matching(&M);
+  graph E = union_tree_matching(T, &M);
+  print_graph(&E);
 
   return P;
 };
