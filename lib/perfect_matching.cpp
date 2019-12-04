@@ -40,9 +40,8 @@ struct blossom {
   blossom(int v) {
     this->root = v;
   }
-  int size(){
-    return this->right.size() + this->left.size() -1;
-  }
+  int size() {
+    return this->right.size() + this->left.size() -1; }
   bool is_in_left(int v) {
     for (int i=0; i<(int)this->left.size(); i++)
       if (this->left[i] == v)
@@ -56,15 +55,72 @@ struct blossom {
     return false;
   }
   int dist_to_root(int v) {
-    for (int i=0; i<(int)this->left.size(); i++) {
+    for (int i=0; i<(int)this->left.size(); i++)
       if (this->left[i] == v)
         return i;
-    }
-    for (int i=0; i<(int)this->right.size(); i++) {
+    for (int i=0; i<(int)this->right.size(); i++)
       if (this->right[i] == v)
         return i;
-    }
     return -1;
+  }
+  vector<int> path_to_root_clockwise(int v) {
+    vector<int> P;
+    if (this->is_in_right(v)) {
+      int d = this->dist_to_root(v);
+      for (int i=d; i>=0; i--)
+        P.push_back(this->right[i]);
+      return P;
+    }
+    if (this->is_in_left(v)) {
+      int d = this->dist_to_root(v);
+      for (int i=d; i<(int)this->left.size(); i++)
+        P.push_back(this->left[i]);
+      for (int i=(int)this->right.size()-1; i>=0; i--)
+        P.push_back(this->right[i]);
+      return P;
+    }
+    else {
+      cout << "Ce noeud n'est pas dans le blossom";
+      return P;
+    }
+  }
+  vector<int> path_to_root_anticlockwise(int v) {
+    vector<int> P;
+    if (this->is_in_left(v)) {
+      int d = this->dist_to_root(v);
+      for (int i=d; i>=0; i--)
+        P.push_back(this->left[i]);
+      return P;
+    }
+    else {
+      int d = this->dist_to_root(v);
+      for (int i=d; i<(int)this->right.size(); i++)
+        P.push_back(this->right[i]);
+      for (int i=(int)this->left.size()-1; i>=0; i--)
+        P.push_back(this->left[i]);
+      return P;
+    }
+  }
+  vector<int> augmenting_path_to_root(int v) {
+    if ((this->is_in_left(v) && this->dist_to_root(v)%2==0) ||
+        (this->is_in_right(v) && this->dist_to_root(v)%2==1)) {
+          cout << "CLockwise\n";
+      return this->path_to_root_anticlockwise(v);
+    }
+    else {
+      cout << "Anticlockwise\n";
+      return this->path_to_root_clockwise(v);
+    }
+  }
+  vector<int> path_from_root(int v) {
+    vector<int> P;
+    if (this->is_in_left(v))
+      for (int i=0; i<=(int)this->dist_to_root(v); i++)
+        P.push_back(this->left[i]);
+    else
+      for (int i=0; i<=(int)this->dist_to_root(v); i++)
+        P.push_back(this->right[i]);
+    return P;
   }
 };
 
@@ -174,45 +230,6 @@ int find_blossom_border(blossom* B, graph* G, int node) {
   return -1;
 }
 
-vector<int> find_path_in_blossom_to_matched_edge(blossom* B, int node,
-                                              vector<int> P) {
-  int dist_to_root = -1;
-  for (int i=0; i<(int)B->left.size(); i++)
-    if (B->left[i] = node)
-      dist_to_root = i+1;
-
-  if (dist_to_root%2 == 0)
-    while (dist_to_root > 0)
-      P.push_back(B->left[dist_to_root-1]);
-  else if (dist_to_root>0) {
-    for (int i=dist_to_root-1; i<(int)B->left.size(); i++)
-      P.push_back(B->left[i]);
-    for (int i=(int)B->right.size()-1; i>=0; i--)
-      P.push_back(B->right[i]);
-  }
-  else {
-    for (int i=0; i<(int)B->right.size();i++)
-      if (B->right[i] = node)
-        dist_to_root = i+1;
-
-    if (dist_to_root%2 == 0)
-      while (dist_to_root > 0)
-        P.push_back(B->right[dist_to_root-1]);
-    else if (dist_to_root>0) {
-      for (int i=dist_to_root-1; i<(int)B->right.size(); i++)
-        P.push_back(B->right[i]);
-      for (int i=(int)B->left.size()-1; i>=0; i--)
-        P.push_back(B->left[i]);
-    }
-  }
-  return P;
-}
-
-vector<int> blossom_fin(blossom* B, vector<int> P, int node) {
-
-  return P;
-}
-
 vector<int> lifted_path(graph* G, matching* M, blossom* B,
                         graph* G2, matching* M2, vector<int> P2) {
   int n = G->n;
@@ -222,63 +239,40 @@ vector<int> lifted_path(graph* G, matching* M, blossom* B,
   make_is_in_blossom(n, is_in_blossom, B);
   int prelabel[n2-1];
   find_prelabel(n, n2, is_in_blossom, prelabel);
-  cout << "Voici le prelabel trouvé\n";
-  for (int i=0; i<n2-1; i++){
-    cout << i << "->" << prelabel[i] << "\n";
-  }
-  cout << "Voici P2: ";
-  for (int i=0; i<(int)P2.size(); i++) {
-    cout << P2[i] << " ";
-  }
-  cout << "\n";
   int inode = 0;
   while (P2[inode]!=n2-1 && inode < (int)P2.size()) {
     P.push_back(prelabel[P2[inode]]);
     inode++;
   }
-  cout << "inode: " << inode << "\n";
   if (inode == (int)P2.size()) {
-    cout << "Aucun probleme dans le lift\n";
     return P;
   }
   if (inode == (int)P2.size()-1) {
-    cout << "Blossom à la fin\n";
-    P = blossom_fin(B, P, P[inode-1]);
+    int border = find_blossom_border(B,G,prelabel[P2[inode-1]]);
+    vector<int> P_suite = B->augmenting_path_to_root(border);
+    for (int i=0; i<(int)P_suite.size(); i++)
+      P.push_back(P_suite[i]);
+    return P;
+  }
+  if (inode == 0) {
+    P = B->path_from_root(find_blossom_border(B, G, prelabel[P2[1]]));
+    for (int i=1; i<(int)P2.size(); i++)
+      P.push_back(prelabel[P2[i]]);
     return P;
   }
 
-  int next_node = P2[inode+1];
-  if (is_in_blossom[M2->pair[next_node]]) {
-    if (inode == 0) {
-      P.push_back(B->root);
-      cout << next_node << "\n";
-      cout << "Blossom au début\n";
-    }
-    else {
-      P = find_path_in_blossom_to_matched_edge(B, P2[inode-1], P);
-      cout << "case 1\n";
-    }
+  int border = find_blossom_border(B, G, prelabel[P2[inode+1]]);
+  vector<int> P_in_blossom;
+  if (inode%2==0) {
+      P_in_blossom = B->path_from_root(border);
   }
   else {
-    int node = find_blossom_border(B, G, next_node);
-    if (B->is_in_left(node)) {
-      int i=0;
-      while (B->left[i] != node) {
-        P.push_back(B->left[i]);
-      }
-      P.push_back(node);
-      cout << "case 2";
-    }
-    else {
-      int i=0;
-      while (B->right[i] != node) {
-        P.push_back(B->right[i]);
-      }
-      P.push_back(node);
-      cout << "case 3";
-    }
+    P_in_blossom = B->augmenting_path_to_root(border);
   }
-  cout << "Blossom lifted\n";
+  for (int i=0; i<(int)P_in_blossom.size(); i++) {
+    P.push_back(P_in_blossom[i]);
+  }
+  inode++;
   while(inode < (int)P2.size()) {
     P.push_back(prelabel[P2[inode]]);
     inode++;
@@ -287,16 +281,13 @@ vector<int> lifted_path(graph* G, matching* M, blossom* B,
 }
 
 vector<int> find_augmenting_path(graph* G, matching* M) {
-  print_graph(*G);
-  for(int i=0; i<M->n; i++) {
-    cout << M->pair[i] << " ";
-  }
-  cout << "\n";
   //initialize
   int n = G->n;
   bool visited[n];
   bool used[n][n];
-  int k=0;
+  for (int i=0; i<n; i++)
+    for (int j=0; j<n; j++)
+      used[i][j] = false;
   //mark matched edges
   for (int i=0; i<n; i++)
     if (M->pair[i]>=0)
@@ -317,10 +308,7 @@ vector<int> find_augmenting_path(graph* G, matching* M) {
   }
   //search augmenting path
   while(!nodes_to_visit.empty()) {
-    cout << k << "\n";
-    k++;
     int v = nodes_to_visit.front();
-    cout << "Voici le noeud qu'on parcourt: " << v << "\n";
     nodes_to_visit.pop();
     while(!edges_to_visit[v].empty()) {
       int w = edges_to_visit[v].front();
@@ -331,28 +319,19 @@ vector<int> find_augmenting_path(graph* G, matching* M) {
       }
       if (used[v][w])
         break;
-      cout << "Son voisin: " << w << "\n";
       if (!visited[w]) {
-        cout << w << " visité pour la première fois" << "\n";
         int x = M->pair[w];
-        cout << "Donc on ajoute " << x << "\n";
         tree_of_node[v]->add_edge(w, x, tree_of_node);
-        cout << "Ajout complété\n";
         nodes_to_visit.push(x);
         visited[x] = true;
       }
       else if (tree_of_node[w]->depth%2 == 0) {
-        cout << "La profondeur est paire\n";
         if (tree_of_node[w]->root != tree_of_node[v]->root) {
           //There is an augmenting path
-          cout << "On a trouvé un chemin!\n";
-          cout << "Les ancêtres sont " << tree_of_node[w]->root << " " << tree_of_node[v]->root << "\n";
           return construct_path(G, M, tree_of_node[v], tree_of_node[w]);
         }
         else {
           //contract blossom
-          cout << "L'ancêtre commun est " << tree_of_node[w]->root << " " << tree_of_node[v]->root << "\n";
-          cout << "On contracte un blossom\n";
           blossom B = form_blossom(G, tree_of_node[v], tree_of_node[w]);
           int new_n = n-B.size()+1;
           graph G2(new_n);
@@ -382,11 +361,6 @@ matching perfect_matching(graph G) {
   vector<int> P;
   do {
     P = find_augmenting_path(&G, &M);
-    cout << "La taille de P est " << P.size() << "\n";
-    for (int i = 0; i<(int)P.size(); i++) {
-      cout << P[i] << " ";
-    }
-    cout << "\n";
     augment_matching(&M, P);
 
   }
