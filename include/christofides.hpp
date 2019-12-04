@@ -3,6 +3,6 @@
 
 #include "graph.hpp"
 
-path christofides(graph, graph, int, int);
+path christofides(graph*, graph*, int, int);
 
 #endif

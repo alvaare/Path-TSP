@@ -15,8 +15,8 @@ int next_node(int n, int dist[], bool visited[]){
   return imin;
 }
 
-graph primMST(graph G) {
-  int n = G.n;
+graph primMST(graph* G) {
+  int n = G->n;
   graph T(n);
   int parent[n];
   int dist[n];
@@ -39,9 +39,9 @@ graph primMST(graph G) {
       T.edges[p][v] = 1;
     }
     for (int l=0; l<n; l++){
-      if (!visited[l] && G.edges[v][l]>0 && G.edges[v][l]<dist[l]) {
+      if (!visited[l] && G->edges[v][l]>0 && G->edges[v][l]<dist[l]) {
         parent[l] = v;
-        dist[l] = G.edges[v][l];
+        dist[l] = G->edges[v][l];
       }
     }
   }

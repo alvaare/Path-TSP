@@ -38,10 +38,10 @@ struct matching {
   }
 };
 
-bool is_connex(graph);
+bool is_connex(graph*);
 
-int degree(graph, int);
+int degree(graph*, int);
 
-void print_graph(graph);
+void print_graph(graph*);
 
 #endif

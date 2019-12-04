@@ -3,6 +3,6 @@
 
 #include "graph.hpp"
 
-graph primMST(graph);
+graph primMST(graph*);
 
 #endif

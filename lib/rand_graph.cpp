@@ -21,7 +21,7 @@ graph rand_graph(int n) {
 
 graph rand_connex_graph(int n) {
   graph G = rand_graph(n);
-  while (!is_connex(G)) {
+  while (!is_connex(&G)) {
     G = rand_graph(n);
   }
   return G;
