@@ -8,6 +8,7 @@ using namespace std;
 
 vector<int> nodes_uncomplete(graph* T, int s, int t) {
   vector<int> nodes;
+  print_graph(T);
   int n = T->n;
   for (int i=0; i<n; i++) {
     if (i==s || i==t) {
@@ -34,20 +35,22 @@ graph induced_subgraph(graph* G, vector<int> O) {
   return S;
 }
 
-graph union_tree_matching(graph* T, matching* M) {
+graph union_tree_matching(graph* T, matching* M, vector<int> O) {
   int n=T->n;
   graph G(n);
   for (int i=0; i<n; i++)
     for (int j=0; j<n; j++)
-      if (T->edges[i][j]>0 || M->pair[i]==j)
-        G.edges[i][j] = 1;
+      if (T->edges[i][j]>0)
+        G.edges[i][j]++;
+  for (int i=0; i<M->n; i++)
+    if (M->pair[i]!=-1)
+      G.edges[O[i]][O[M->pair[i]]]++;
   return G;
 }
 
 path christofides(graph* G, graph* T, int s, int t) {
   int n = G->n;
   path P(n);
-
   vector<int> O = nodes_uncomplete(T, s, t);
   for (int i=0; i<(int)O.size(); i++) {
     cout << O[i] << " ";
@@ -55,9 +58,9 @@ path christofides(graph* G, graph* T, int s, int t) {
   cout << "\n";
   graph S = induced_subgraph(G, O);
   print_graph(&S);
-  matching M = perfect_matching(S);
+  matching M = perfect_matching(&S);
   print_matching(&M);
-  graph E = union_tree_matching(T, &M);
+  graph E = union_tree_matching(T, &M, O);
   print_graph(&E);
 
   return P;

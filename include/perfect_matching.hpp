@@ -3,6 +3,6 @@
 
 #include "graph.hpp"
 
-matching perfect_matching(graph);
+matching perfect_matching(graph*);
 
 #endif

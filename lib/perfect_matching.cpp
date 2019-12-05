@@ -271,9 +271,7 @@ vector<int> lifted_path(graph* G, matching* M, blossom* B,
   int prelabel[n2-1];
   find_prelabel(n, n2, is_in_blossom, prelabel);
   int inode = 0;
-  while (P2[inode]!=n2-1
-    &&
-    inode < (int)P2.size()) {
+  while (inode < (int)P2.size() && P2[inode]!=n2-1) {
     P.push_back(prelabel[P2[inode]]);
     inode++;
   }
@@ -334,6 +332,10 @@ bool incorrect_matching(matching* M) {
   return false;
 }
 
+void free_tree_of_node(int n, tree** tree_of_node) {
+  for (int i=0; i<n; i++)
+    delete tree_of_node[i];
+}
 
 vector<int> find_augmenting_path(graph* G, matching* M) {
   //initialize
@@ -383,7 +385,9 @@ vector<int> find_augmenting_path(graph* G, matching* M) {
       else if (tree_of_node[w]->depth%2 == 0) {
         if (tree_of_node[w]->root != tree_of_node[v]->root) {
           //There is an augmenting path
-          return construct_path(G, M, tree_of_node[v], tree_of_node[w]);
+          vector<int> P=construct_path(G, M, tree_of_node[v], tree_of_node[w]);
+          free_tree_of_node(n, tree_of_node);
+          return P;
         }
         else {
           //contract blossom
@@ -393,6 +397,7 @@ vector<int> find_augmenting_path(graph* G, matching* M) {
           matching M2(new_n);
           contraction(G,M,&B,&G2,&M2);
           vector<int> P2 = find_augmenting_path(&G2, &M2);
+          free_tree_of_node(n, tree_of_node);
           return lifted_path(G,M,&B,&G2,&M2,P2);
         }
       }
@@ -401,6 +406,7 @@ vector<int> find_augmenting_path(graph* G, matching* M) {
     }
     visited[v] = true;
   }
+  free_tree_of_node(n, tree_of_node);
   return vector<int> ();
 }
 
@@ -411,11 +417,11 @@ void augment_matching(matching* M, vector<int> P) {
   }
 }
 
-matching perfect_matching(graph G) {
-  matching M(G.n);
+matching perfect_matching(graph* G) {
+  matching M(G->n);
   vector<int> P;
   do {
-    P = find_augmenting_path(&G, &M);
+    P = find_augmenting_path(G, &M);
     augment_matching(&M, P);
 
   }

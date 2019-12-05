@@ -8,12 +8,17 @@ struct graph {
   int** edges;
   graph(int n) {
     this->n = n;
-    edges = new int*[n];
+    this->edges = new int*[n];
     for (int i = 0; i < n; i++) {
-      edges[i] = new int[n];
+      this->edges[i] = new int[n];
       for (int j = 0; j < n; j++)
-        edges[i][j] = 0;
+        this->edges[i][j] = 0;
     }
+  }
+  ~graph() {
+    for (int i=0; i<n; i++)
+      delete [] this->edges[i];
+    delete [] this->edges;
   }
 };
 
@@ -23,6 +28,9 @@ struct path {
   path(int n) {
     this->n = n;
     nodes = new int[n];
+  }
+  ~path() {
+    delete [] nodes;
   }
 };
 
@@ -35,6 +43,9 @@ struct matching {
     for (int i=0; i<n; i++) {
       this->pair[i] = -1;
     }
+  }
+  ~matching() {
+    delete [] pair;
   }
 };
 
