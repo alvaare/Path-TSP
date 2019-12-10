@@ -10,7 +10,7 @@ OBJS := $(patsubst $(LDIR)/%,$(BDIR)/%,$(SRCS:.cpp=.o))
 INC := -I include
 
 CXX := g++
-CXXFLAGS := -g -Wall
+CXXFLAGS := -g -Wall -lemon
 
 all: $(OBJS)
 	@echo " Linking...";

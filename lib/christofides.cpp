@@ -2,7 +2,7 @@
 #include "mst.hpp"
 #include "graph.hpp"
 #include "rand_graph.hpp"
-#include "perfect_matching.hpp"
+#include "mw_perfect_matching.hpp"
 #include <vector>
 using namespace std;
 
@@ -13,7 +13,7 @@ vector<int> nodes_uncomplete(graph* T, int s, int t) {
   for (int i=0; i<n; i++) {
     if (i==s || i==t) {
       if (degree(T, i)%2 == 0) {
-        nodes.push_back(s);
+        nodes.push_back(i);
       }
     }
     else if (degree(T,i)%2 == 1) {
@@ -58,7 +58,7 @@ path christofides(graph* G, graph* T, int s, int t) {
   cout << "\n";
   graph S = induced_subgraph(G, O);
   print_graph(&S);
-  matching M = perfect_matching(&S);
+  matching M = mw_perfect_matching(&S);
   print_matching(&M);
   graph E = union_tree_matching(T, &M, O);
   print_graph(&E);

@@ -11,9 +11,11 @@ int main() {
   int n = 8;
   graph G = rand_graph(n);
   print_graph(&G);
-  graph T = primMST(&G);
+  graph C = complete_graph(&G);
+  print_graph(&C);
+  graph T = primMST(&C);
   print_graph(&T);
 
-  christofides(&G, &T, 0, 1);
+  christofides(&C, &T, 0, 1);
 
 }

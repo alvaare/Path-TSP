@@ -1,5 +1,6 @@
 #include<iostream>
 #include<queue>
+#include<climits>
 #include"graph.hpp"
 using namespace std;
 
@@ -50,4 +51,21 @@ void print_matching(matching* M) {
   for (int i=0; i<M->n; i++) {
     cout << i << "->" << M->pair[i] << "\n";
   }
+}
+
+graph complete_graph(graph* G) {
+  graph C(G->n);
+  for (int i=0; i<G->n; i++)
+    for (int j=0; j<G->n; j++) {
+      if (G->edges[i][j]>0 || i==j)
+        C.edges[i][j] = G->edges[i][j];
+      else
+        C.edges[i][j] = INT_MAX/2;
+      }
+  for (int k=0; k<G->n; k++)
+    for (int i=0; i<G->n; i++)
+      for (int j=0; j<G->n; j++)
+        if(C.edges[i][j] > C.edges[i][k]+C.edges[k][j])
+          C.edges[i][j] = C.edges[i][k]+C.edges[k][j];
+  return C;
 }
