@@ -69,3 +69,10 @@ graph complete_graph(graph* G) {
           C.edges[i][j] = C.edges[i][k]+C.edges[k][j];
   return C;
 }
+
+void print_path(path* P) {
+  for (int i=0; i<P->n; i++) {
+    cout << P->nodes[i] << " ";
+  }
+  cout << "\n";
+}

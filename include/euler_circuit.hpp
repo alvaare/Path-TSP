@@ -10,8 +10,15 @@ struct circuit {
     this->node = n;
     this->next = NULL;
   }
+  ~circuit() {
+    delete this->next;
+  }
 };
 
 circuit euler_circuit(graph*, int, int);
+
+void print_circuit(circuit*);
+
+path clean_circuit(circuit*, int, int);
 
 #endif

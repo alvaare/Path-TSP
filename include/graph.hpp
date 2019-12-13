@@ -59,4 +59,6 @@ void print_matching(matching*);
 
 graph complete_graph(graph*);
 
+void print_path(path*);
+
 #endif
