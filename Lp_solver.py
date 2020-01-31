@@ -7,7 +7,7 @@ n = 10
 s,t = rd.choice(n,2,replace=False)
 
 def rand_graph():
-    G = [[rd.binomial(1,0.5) for _ in range(n)] for _ in range(n)]
+    G = [[rd.randint(0,3) for _ in range(n)] for _ in range(n)]
     for i in range(n):
         for j in range(i, n):
             if i==j:
@@ -25,7 +25,7 @@ def is_connected(G):
         if (not visited[v]):
             visited[v]=True
             for j in range(n):
-                if G[v][j] == 1 and not visited[j]:
+                if G[v][j] > 0 and not visited[j]:
                     q.put(j)
     for b in visited:
         if b == 0:
@@ -43,8 +43,8 @@ def make_sets():
     flow_v = set()
     flow_t = set()
     for i in range(n):
-        for j in range(i):
-            if (G[i][j]==1):
+        for j in range(i+1, n):
+            if (G[i][j]>0):
                 edges.add((i,j))
                 flow_t.add((i,j))
                 flow_t.add((j,i))
@@ -57,19 +57,18 @@ def make_sets():
 def delta_plus(v):
     res = set()
     for a in range(n):
-        if G[a][v] == 1:
-            res.add((a,v))
+        if G[v][a] > 0:
+            res.add((v,a))
     return res
 
 def delta_minus(v):
     res = set()
     for a in range(n):
-        if G[v][a] == 1:
-            res.add((v,a))
+        if G[a][v] > 0:
+            res.add((a,v))
     return res
 
 G = rand_connected_graph()
-
 print("G= ", G)
 print("s,t = ", s,t)
 print("")
@@ -82,20 +81,24 @@ x = pulp.LpVariable.dicts('x', edges)
 f_t = pulp.LpVariable.dicts('f_t', flow_t)
 f_v = pulp.LpVariable.dicts('f_v', flow_v)
 
-prob += lpSum(x)
+def make_weighted_x(X):
+    return [x[(i,j)]*G[i][j] for (i,j) in edges]
+
+prob += lpSum(make_weighted_x(x))
 
 for (v,i,j) in flow_v:
     prob += f_v[(v,i,j)] >= 0
     if j < i:
-        prob += f_v[(v,i,j)] <= x[(i,j)]
-    else:
         prob += f_v[(v,i,j)] <= x[(j,i)]
+    else:
+        prob += f_v[(v,i,j)] <= x[(i,j)]
 
 for (i,j) in edges:
     prob += f_t[(i,j)] >= 0
     prob += f_t[(j,i)] >= 0
     prob += f_t[(i,j)] <= x[(i,j)]
     prob += f_t[(j,i)] <= x[(i,j)]
+#    prob += x[(i,j)] <= 1
 
 for v in range(n):
     if v != s and v != t:
@@ -124,14 +127,47 @@ sortant = lpSum([f_t[a] for a in delta_plus(t)])
 entrant = lpSum([f_t[a] for a in delta_minus(t)])
 prob += sortant == entrant + 1
 
-entrant = lpSum([f_t[a] for a in delta_plus(s)])
-sortant = lpSum([f_t[a] for a in delta_minus(s)])
-prob += sortant == entrant + 1
+sortant = lpSum([f_t[a] for a in delta_plus(s)])
+entrant = lpSum([f_t[a] for a in delta_minus(s)])
+prob += sortant == entrant - 1
 
-#print(prob)
+print(prob)
 
 prob.solve()
-print("Status:", LpStatus[prob.status])
-for v in prob.variables():
-    if v.name[0] == "x":
-        print(v.name, "=", v.varValue)
+print("Status:", LpStatus[prob.status], value(lpSum(x)))
+
+def from_name_to_edge(name):
+    i = 0;
+    while name[i] != "(":
+        i+=1
+    i+=1
+    u = ""
+    while name[i] != ",":
+        u+=name[i]
+        i+=1
+    v = ""
+    i+=2
+    while name[i] != ")":
+        v+=name[i]
+        i+=1
+    return int(u), int(v)
+
+def from_variables_to_graph(variables):
+    G = [[0 for _ in range(n)] for _ in range(n)]
+    for v in variables:
+        if v.name[0] == "x":
+            i, j = from_name_to_edge(v.name)
+            G[i][j] = v.varValue
+            G[j][i] = v.varValue
+    return G
+
+def store_graph(G):
+    f = open("temp.txt", "w")
+    f.write(str(n)+"\n")
+    print(G)
+    for l in G:
+        for c in l:
+            f.write(str(c)+"\n")
+    f.close()
+
+store_graph(from_variables_to_graph(prob.variables()))
