@@ -76,3 +76,16 @@ void print_path(path* P) {
   }
   cout << "\n";
 }
+
+void print_LP_solution(LP_solution* G) {
+  cout << "n: " << G->n << "\n";
+  cout << "s: " << G->s << "\n";
+  cout << "t: " << G->t << "\n";
+  for (int i=0; i<G->n; i++) {
+    for (int j=0; j<G->n; j++) {
+      cout << G->edges[i][j] << "\t";
+    }
+    cout << "\n";
+  }
+  cout << "\n";
+}

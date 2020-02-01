@@ -49,6 +49,28 @@ struct matching {
   }
 };
 
+struct LP_solution {
+  int n;
+  int s;
+  int t;
+  double** edges;
+  LP_solution(int n) {
+    this->n = n;
+    this->edges = new double*[n];
+    for (int i = 0; i < n; i++) {
+      this->edges[i] = new double[n];
+      for (int j = 0; j < n; j++)
+        this->edges[i][j] = 0;
+    }
+  }
+  ~LP_solution() {
+    for (int i=0; i<n; i++)
+      delete [] this->edges[i];
+    delete [] this->edges;
+  }
+};
+
+
 bool is_connex(graph*);
 
 int degree(graph*, int);
@@ -60,5 +82,7 @@ void print_matching(matching*);
 graph complete_graph(graph*);
 
 void print_path(path*);
+
+void print_LP_solution(LP_solution*);
 
 #endif

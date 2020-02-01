@@ -69,9 +69,11 @@ def delta_minus(v):
     return res
 
 G = rand_connected_graph()
+'''
 print("G= ", G)
 print("s,t = ", s,t)
 print("")
+'''
 
 edges, flow_v, flow_t = make_sets()
 
@@ -131,7 +133,7 @@ sortant = lpSum([f_t[a] for a in delta_plus(s)])
 entrant = lpSum([f_t[a] for a in delta_minus(s)])
 prob += sortant == entrant - 1
 
-print(prob)
+#print(prob)
 
 prob.solve()
 print("Status:", LpStatus[prob.status], value(lpSum(x)))
@@ -164,7 +166,8 @@ def from_variables_to_graph(variables):
 def store_graph(G):
     f = open("temp.txt", "w")
     f.write(str(n)+"\n")
-    print(G)
+    f.write(str(s)+"\n")
+    f.write(str(t)+"\n")
     for l in G:
         for c in l:
             f.write(str(c)+"\n")
