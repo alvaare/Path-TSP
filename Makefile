@@ -9,7 +9,7 @@ SRCS := $(shell find $(LDIR) -type f -name *.cpp)
 OBJS := $(patsubst $(LDIR)/%,$(BDIR)/%,$(SRCS:.cpp=.o))
 INC := -I include
 
-CXX := g++-7
+CXX := g++
 CXXFLAGS := -g -Wall -lemon
 
 all: $(OBJS)
