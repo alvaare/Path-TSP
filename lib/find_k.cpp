@@ -51,3 +51,16 @@ int find_k(LP_solution* x) {
         ks.push(k_of_double(x->edges[i][j]));
   return lcm_multiple(&ks);
 }
+
+graph from_LP_solution_to_graph(LP_solution* x) {
+  int k = find_k(x);
+  int n = x->n;
+  graph G(n);
+
+  for(int i=0; i<n; i++) {
+    for(int j=0; j<n; j++) {
+      G.edges[i][j] = round(x->edges[i][j]*k);
+    }
+  }
+  return G;
+}
