@@ -135,7 +135,7 @@ prob += sortant == entrant - 1
 
 #print(prob)
 
-prob.solve()
+prob.solve(pulp.COIN_CMD(options=['primalSimplex']))
 print("Status:", LpStatus[prob.status], value(lpSum(x)))
 
 def from_name_to_edge(name):
