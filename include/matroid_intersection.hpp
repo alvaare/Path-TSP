@@ -9,8 +9,8 @@ using namespace std;
 struct d_node {
   int i;
   int j;
-  int id_k;
   int color;
+  int id_k;
 };
 
 bool operator<(const d_node&, const d_node&);
@@ -23,6 +23,8 @@ struct node {
 bool operator<(const node&, const node&);
 
 typedef map<d_node,vector<d_node>> digraph;
+
+typedef pair<d_node,vector<d_node>> d_neighbors;
 
 typedef set<d_node> ind_set;
 
@@ -66,7 +68,7 @@ struct partition_m {
       for (int j = 0; j < n; j++) {
         this->used[i][j] = new bool[k];
         for (int l = 0; l < k; l++)
-          this->used[i][j][k] = false;
+          this->used[i][j][l] = false;
       }
     }
   }
