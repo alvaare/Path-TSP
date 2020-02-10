@@ -27,11 +27,13 @@ digraph initialize_digraph(graph* G, int k) {
       for (int color = 0; color < G->edges[i][j]; color++)
         for (int id_k=0; id_k<k; id_k++)
           DG.insert(d_neighbors({i,j,color,id_k}, {}));
+  DG.insert(d_neighbors(s(), {}));
+  DG.insert(d_neighbors(r(), {}));
   return DG;
 }
 
-digraph construct_digraph(graphic_m* M1, partition_m* M2,
-                          ind_set* J, graph* G, int k) {
+digraph construct_digraph(graphic_m* M1, partition_m* M2, ind_set* J, graph* G,
+  int k) {
   digraph DG = initialize_digraph(G, k);
 
   return DG;
