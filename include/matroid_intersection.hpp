@@ -59,15 +59,16 @@ struct part_m {
   int n;
   int k;
   bool*** used;
-  part_m(int n, int k) {
+  part_m(int n, int k, graph* G) {
     this->n = n;
     this->k = k;
     this->used = new bool**[n];
     for (int i = 0; i < n; i++) {
       this->used[i] = new bool*[n];
       for (int j = 0; j < n; j++) {
-        this->used[i][j] = new bool[k];
-        for (int l = 0; l < k; l++)
+        int colors = G->edges[i][j];
+        this->used[i][j] = new bool[colors];
+        for (int l = 0; l < colors; l++)
           this->used[i][j][l] = false;
       }
     }

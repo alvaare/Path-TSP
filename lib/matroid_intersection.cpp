@@ -61,6 +61,9 @@ bool can_add(d_node e, graphic_m* M) {
   return M->set_of_node[e.i][e.id_k]!=M->set_of_node[e.j][e.id_k];
 }
 
+bool can_add(d_node e, part_m* M) {
+  return !M->used[e.i][e.j][e.color];
+}
 
 digraph const_digraph(graphic_m* M1, part_m* M2, ind_set* J, graph* G, int k) {
   digraph DG = initialize_digraph(G, k);
@@ -70,6 +73,8 @@ digraph const_digraph(graphic_m* M1, part_m* M2, ind_set* J, graph* G, int k) {
     if (e!=s() && e!=r() && J->find(e)==J->end()) {
       if (can_add(e, M1))
         it->second.push_back(s());
+      if (can_add(e, M2))
+        DG[r()].push_back(e);
     }
   }
   print_digraph(&DG);
@@ -80,7 +85,7 @@ ind_set max_ind_set(graph* G, int k) {
   int n=G->n;
   ind_set J;
   graphic_m M1(n,k);
-  part_m M2(n,k);
+  part_m M2(n,k,G);
   while(true) {
     digraph DG = const_digraph(&M1, &M2, &J, G, k);
     return J;
