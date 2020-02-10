@@ -52,8 +52,7 @@ int find_k(LP_solution* x) {
   return lcm_multiple(&ks);
 }
 
-graph from_LP_solution_to_graph(LP_solution* x) {
-  int k = find_k(x);
+graph from_LP_solution_to_graph(LP_solution* x, int k) {
   int n = x->n;
   graph G(n);
 
@@ -63,4 +62,10 @@ graph from_LP_solution_to_graph(LP_solution* x) {
     }
   }
   return G;
+}
+
+
+graph from_LP_solution_to_graph(LP_solution* x) {
+  int k = find_k(x);
+  return from_LP_solution_to_graph(x, k);
 }

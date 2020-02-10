@@ -4,7 +4,7 @@ import numpy.random as rd
 import queue
 
 n = 10
-s,t = rd.choice(n,2,replace=False)
+s,t = 0, n-1
 
 def rand_graph():
     G = [[rd.randint(0,3) for _ in range(n)] for _ in range(n)]

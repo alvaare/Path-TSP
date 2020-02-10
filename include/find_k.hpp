@@ -7,4 +7,7 @@ int find_k(LP_solution*);
 
 graph from_LP_solution_to_graph(LP_solution*);
 
+graph from_LP_solution_to_graph(LP_solution*, int k);
+
+
 #endif

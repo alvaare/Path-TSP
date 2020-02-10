@@ -13,19 +13,14 @@ struct d_node {
   int color;
 };
 
-bool operator<(const d_node& lhs, const d_node& rhs) {
-  return tie(lhs.i, lhs.j, lhs.id_k, lhs.color) <
-    tie(rhs.i, rhs.j, rhs.id_k, rhs.color);
-}
+bool operator<(const d_node&, const d_node&);
 
 struct node {
   int id;
   int id_k;
 };
 
-bool operator<(const node& lhs, const node& rhs) {
-    return tie(lhs.id, lhs.id_k) < tie(rhs.id, rhs.id_k);
-};
+bool operator<(const node&, const node&);
 
 typedef map<d_node,vector<d_node>> digraph;
 
@@ -84,5 +79,7 @@ struct partition_m {
     delete [] this->used;
   }
 };
+
+ind_set max_ind_set(graph*, int);
 
 #endif
