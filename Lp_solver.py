@@ -3,7 +3,7 @@ import numpy as np
 import numpy.random as rd
 import queue
 
-n = 8
+n = 4
 s,t = 0, n-1
 
 def rand_graph():

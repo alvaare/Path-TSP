@@ -55,11 +55,11 @@ struct graphic_m{
   }
 };
 
-struct partition_m {
+struct part_m {
   int n;
   int k;
   bool*** used;
-  partition_m(int n, int k) {
+  part_m(int n, int k) {
     this->n = n;
     this->k = k;
     this->used = new bool**[n];
@@ -72,7 +72,7 @@ struct partition_m {
       }
     }
   }
-  ~partition_m() {
+  ~part_m() {
     for (int i=0; i<n; i++) {
       for (int j=0; j<n; j++)
         delete [] this->used[i][j];
