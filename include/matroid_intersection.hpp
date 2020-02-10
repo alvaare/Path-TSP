@@ -3,6 +3,7 @@
 
 #include<set>
 #include<map>
+#include<vector>
 using namespace std;
 
 struct d_node {
@@ -10,38 +11,58 @@ struct d_node {
   int j;
   int id_k;
   int color;
+};
+
+bool operator<(const d_node& lhs, const d_node& rhs) {
+  return tie(lhs.i, lhs.j, lhs.id_k, lhs.color) <
+    tie(rhs.i, rhs.j, rhs.id_k, rhs.color);
 }
 
 struct node {
   int id;
   int id_k;
-}
+};
+
+bool operator<(const node& lhs, const node& rhs) {
+    return tie(lhs.id, lhs.id_k) < tie(rhs.id, rhs.id_k);
+};
 
 typedef map<d_node,vector<d_node>> digraph;
 
-typedef set<d_node> independent_set;
+typedef set<d_node> ind_set;
 
-struct graphic_matroid {
+struct graphic_m{
   int k;
   int n;
-  set<node>** set_of_node;
-  graphic_matroid(int n, int k) {
+  set<node>*** set_of_node;
+  graphic_m(int n, int k) {
     this->n=n;
     this->k=k;
-    this->set_of_node = new set<node>*[n];
+    this->set_of_node = new set<node>**[n];
     for (int i=0; i<n; i++) {
-      this->set_of_node[i] = new set<node>[k];
-      for (int j=0; j<n; j++)
-        this->set_of_node[i][j] = set<node>
+      this->set_of_node[i] = new set<node>*[k];
+      for (int j=0; j<k; j++) {
+        node u = {i,j};
+        this->set_of_node[i][j] = new set<node>;
+        this->set_of_node[i][j]->insert(u);
+      }
     }
+  }
+  ~graphic_m() {
+    for (int i=0; i<n; i++) {
+      for (int j=0; j<k; j++)
+        delete this->set_of_node[i][j];
+      delete [] this->set_of_node[i];
+    }
+    delete [] this->set_of_node;
   }
 };
 
-struct partition_matroid {
+struct partition_m {
   int n;
   int k;
   bool*** used;
-  partition_matroid(int n, int k) {
+  partition_m(int n, int k) {
     this->n = n;
     this->k = k;
     this->used = new bool**[n];
@@ -54,13 +75,13 @@ struct partition_matroid {
       }
     }
   }
-  ~partition_matroid() {
+  ~partition_m() {
     for (int i=0; i<n; i++) {
       for (int j=0; j<n; j++)
-        delete [] this->edges[i][j];
-      delete [] this->edges[i];
+        delete [] this->used[i][j];
+      delete [] this->used[i];
     }
-    delete [] this->edges;
+    delete [] this->used;
   }
 };
 
