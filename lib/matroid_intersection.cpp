@@ -180,6 +180,29 @@ digraph const_digraph(graphic_m* M1, part_m* M2, ind_set* J, graph* G, int k) {
   return DG;
 }
 
+typedef vector<d_node> dipath;
+
+dipath find_dipath(digraph* G) {
+  dipath P;
+
+  return P;
+}
+
+void update_ind_set(ind_set* J, graphic_m* M1, part_m* M2, dipath P) {
+  int i = 0;
+  for (; i<(int)P.size()-1; i+=2) {
+    erase_part_m(P[i+1], M2);
+    add_part_m(P[i], M2);
+    erase_graphic_m(P[i+1], M1, J);
+    add_graphic_m(P[i], M1);
+    J->insert(P[i]);
+    J->erase(P[i+1]);
+  }
+  J->insert(P[i]);
+  add_part_m(P[i], M2);
+  add_graphic_m(P[i], M1);
+}
+
 ind_set max_ind_set(graph* G, int k) {
   int n=G->n;
   ind_set J;
@@ -187,7 +210,11 @@ ind_set max_ind_set(graph* G, int k) {
   part_m M2(n,k,G);
   while(true) {
     digraph DG = const_digraph(&M1, &M2, &J, G, k);
-    return J;
+    dipath P = find_dipath(&DG);
+    if (P.empty())
+      return J;
+    else
+      update_ind_set(&J, &M1, &M2, P);
   }
   return J;
 }
