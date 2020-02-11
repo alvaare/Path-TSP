@@ -32,7 +32,7 @@ d_node r() {
 }
 
 void print_d_node(d_node e) {
-  cout << e.i << " " << e.j << " " << e.id_k << " " << e.color;
+  cout << e.i << " " << e.j << " " << e.color << " " << e.id_k;
 }
 
 void print_vector(vector<d_node> v) {
@@ -193,35 +193,54 @@ dipath return_dipath(dipath P) {
   return P2;
 }
 
+void print_father(map<d_node, d_node> father) {
+  for(map<d_node,d_node>::iterator it=father.begin(); it!=father.end(); it++) {
+    cout << "The father of: "; print_d_node(it->first); cout << " is: ";
+    print_d_node(it->second); cout << "\n";
+  }
+}
+
 dipath dipath_from_fathers(map<d_node,d_node> father) {
   dipath P;
   d_node v = s();
   while(v!=r()) {
-    d_node v = father[v];
+    if (v!=s()) {
+    print_d_node(v);
+    cout << "\n"; }
+    print_d_node(father[v]);
+    cout << "\n";
+    v = father[v];
     P.push_back(v);
   }
+  P.pop_back();
+  cout << "Call to return_dipath\n";
   return return_dipath(P);
 }
 
-//TODO
+void print_dipath(dipath* P) {
+  cout << "The dipath contains:\n";
+  for(int i=0; i<(int)P->size(); i++) {
+    print_d_node((*P)[i]);
+    cout << "\n";
+  }
+}
+
 dipath find_dipath(digraph* G) {
-  dipath P;
   queue<d_node> Q;
   map<d_node,d_node> father;
   Q.push(r());
-  while(!Q.empty()) {
+  while(Q.front()!=s()) {
     d_node v = Q.front();
     Q.pop();
-    if (v==s())
-      return dipath_from_fathers(father);
     vector<d_node> neighbors = (*G)[v];
     for (int i=0; i<(int)neighbors.size(); i++)
-      if(father.find(neighbors[i]) != father.end()) {
+      if(father.find(neighbors[i]) == father.end()) {
         father[neighbors[i]] = v;
         Q.push(neighbors[i]);
       }
   }
-  return P;
+  cout << "Call to dipath_from_fathers\n";
+  return dipath_from_fathers(father);
 }
 
 void update_ind_set(ind_set* J, graphic_m* M1, part_m* M2, dipath P) {
@@ -246,11 +265,23 @@ ind_set max_ind_set(graph* G, int k) {
   part_m M2(n,k,G);
   while(true) {
     digraph DG = const_digraph(&M1, &M2, &J, G, k);
+    print_digraph(&DG);
     dipath P = find_dipath(&DG);
+    cout << "end of find_dipath\n";
+    print_dipath(&P);
     if (P.empty())
       return J;
     else
       update_ind_set(&J, &M1, &M2, P);
   }
   return J;
+}
+
+void print_ind_set(ind_set* A) {
+  cout << "The independent set contains:\n";
+  for(ind_set::iterator it=A->begin(); it!=A->end(); it++) {
+    print_d_node(*it);
+    cout << "\n";
+  }
+  cout << "\n";
 }

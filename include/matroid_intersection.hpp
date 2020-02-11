@@ -85,4 +85,6 @@ struct part_m {
 
 ind_set max_ind_set(graph*, int);
 
+void print_ind_set(ind_set*);
+
 #endif
