@@ -19,6 +19,10 @@ bool operator!=(const d_node& lhs, const d_node& rhs) {
   return (lhs<rhs || rhs<lhs);
 }
 
+bool operator==(const d_node& lhs, const d_node& rhs) {
+  return !(lhs!=rhs);
+}
+
 d_node s() {
   return {-1,-1,-1,-1};
 }
@@ -182,9 +186,41 @@ digraph const_digraph(graphic_m* M1, part_m* M2, ind_set* J, graph* G, int k) {
 
 typedef vector<d_node> dipath;
 
+dipath return_dipath(dipath P) {
+  dipath P2;
+  for(int i=P.size()-1; i>=0; i--)
+    P2.push_back(P[i]);
+  return P2;
+}
+
+dipath dipath_from_fathers(map<d_node,d_node> father) {
+  dipath P;
+  d_node v = s();
+  while(v!=r()) {
+    d_node v = father[v];
+    P.push_back(v);
+  }
+  return return_dipath(P);
+}
+
+//TODO
 dipath find_dipath(digraph* G) {
   dipath P;
-
+  queue<d_node> Q;
+  map<d_node,d_node> father;
+  Q.push(r());
+  while(!Q.empty()) {
+    d_node v = Q.front();
+    Q.pop();
+    if (v==s())
+      return dipath_from_fathers(father);
+    vector<d_node> neighbors = (*G)[v];
+    for (int i=0; i<(int)neighbors.size(); i++)
+      if(father.find(neighbors[i]) != father.end()) {
+        father[neighbors[i]] = v;
+        Q.push(neighbors[i]);
+      }
+  }
   return P;
 }
 
