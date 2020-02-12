@@ -89,3 +89,21 @@ void print_LP_solution(LP_solution* G) {
   }
   cout << "\n";
 }
+
+int path_cost(path* P, graph* G) {
+  int res=0;
+  graph CG = complete_graph(G);
+  for (int i=0; i<P->n-1; i++) {
+    res+=CG.edges[P->nodes[i]][P->nodes[i+1]];
+  }
+  return res;
+}
+
+double LP_solution_cost(LP_solution* x, graph* G) {
+  double res;
+  graph CG = complete_graph(G);
+  for (int i=0; i<x->n; i++)
+    for (int j=i+1; j<x->n; j++)
+      res+=x->edges[i][j]*CG.edges[i][j];
+  return res;
+}

@@ -85,4 +85,8 @@ void print_path(path*);
 
 void print_LP_solution(LP_solution*);
 
+int path_cost(path*, graph*);
+
+double LP_solution_cost(LP_solution*, graph*);
+
 #endif

@@ -46,7 +46,10 @@ struct graphic_m{
     }
   }
   ~graphic_m() {
-    bool freed[n][k] = {false};
+    bool freed[n][k];
+    for (int i=0; i<n; i++)
+      for (int j=0; j<n; j++)
+        freed[i][j] = false;
     for (int i=0; i<n; i++) {
       for (int j=0; j<k; j++)
         if (!freed[i][j]) {
@@ -89,10 +92,30 @@ struct part_m {
   }
 };
 
+struct tree_list {
+  int n;
+  int k;
+  graph** content;
+  tree_list(int n, int k) {
+    this->n=n;
+    this->k=k;
+    this->content = new graph*[k];
+    for (int i=0; i<k; i++)
+      this->content[i] = new graph(n);
+  }
+  ~tree_list() {
+    for (int i=0; i<k; i++)
+      delete this->content[i];
+    delete [] this->content;
+  }
+};
+
 ind_set max_ind_set(graph*, int);
 
 void print_ind_set(ind_set*);
 
-vector<graph> tree_vector_from_ind_set(ind_set*, int);
+tree_list tree_list_from_ind_set(graph*, ind_set*, int);
+
+void print_tree_list(tree_list*);
 
 #endif

@@ -10,6 +10,7 @@
 using namespace std;
 
 int main() {
+  //srand(time(NULL));
   int n;
   cout << "Enter n: ";
   cin >> n;
@@ -29,5 +30,15 @@ int main() {
   print_graph(&integer_solution);
   ind_set A = max_ind_set(&integer_solution, k);
   print_ind_set(&A);
-  //vector<graph> LT =
+  tree_list LT = tree_list_from_ind_set(&G, &A, k);
+
+  cout << "LP solution cost: " << LP_solution_cost(&x, &G) << "\n";
+  cout << "Christofides costs:\n";
+  for (int i=0; i<k; i++) {
+    graph* T = LT.content[i];
+    print_graph(T);
+    path P = christofides(&G, T, s, t);
+    print_path(&P);
+    cout << path_cost(&P, &G) << "\n";
+  }
 }

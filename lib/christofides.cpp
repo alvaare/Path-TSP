@@ -56,7 +56,5 @@ path christofides(graph* G, graph* T, int s, int t) {
   graph E = union_tree_matching(T, &M, O);
   circuit C = euler_circuit(&E, s, t);
   path P = clean_circuit(&C, n, t);
-  print_path(&P);
-
   return P;
 };

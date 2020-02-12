@@ -221,9 +221,9 @@ digraph const_digraph(graphic_m* M1, part_m* M2, ind_set* J, graph* G, int k) {
         DG[r()].push_back(e);
       for(ind_set::iterator it=J->begin(); it!=J->end(); it++) {
         d_node f = *it;
-        if (can_add(e, M1) && can_exchange(e, f, M1, J))
+        if (!can_add(e, M1) && can_exchange(e, f, M1, J))
           DG[e].push_back(f);
-        if (can_add(e, M2) && can_exchange(e, f, M2, J))
+        if (!can_add(e, M2) && can_exchange(e, f, M2, J))
           DG[f].push_back(e);
       }
     }
@@ -327,8 +327,22 @@ ind_set max_ind_set(graph* G, int k) {
   return J;
 }
 
-vector<graph> tree_vector_from_ind_set(ind_set* J, int k) {
-  vector<graph> LT;
+void print_tree_list(tree_list* LT) {
+  for (int i=0; i<LT->k; i++)
+    print_graph(LT->content[i]);
+}
 
+tree_list tree_list_from_ind_set(graph* G, ind_set* J, int k) {
+  tree_list LT = tree_list(G->n, k);
+  if ((int)J->size()!=k*(G->n-1))
+  {
+    cout << "independent set of incorrect size\n";
+    print_ind_set(J);
+    return LT;
+  }
+  for (ind_set::iterator it=J->begin(); it!=J->end(); it++) {
+    LT.content[it->id_k]->edges[it->i][it->j] = G->edges[it->i][it->j];
+    LT.content[it->id_k]->edges[it->j][it->i] = G->edges[it->j][it->i];
+  }
   return LT;
 }
