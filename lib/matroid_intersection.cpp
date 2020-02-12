@@ -132,6 +132,7 @@ void add_graphic_m(d_node e, graphic_m* M) {
 
 void add_part_m(d_node e, part_m* M) {
   M->used[e.i][e.j][e.color] = true;
+  M->used[e.j][e.i][e.color] = true;
 }
 
 typedef map<int,vector<int>> s_graph;
@@ -187,6 +188,7 @@ void erase_graphic_m(d_node e, graphic_m* M, ind_set* J) {
 }
 
 void erase_part_m(d_node e, part_m* M) {
+  M->used[e.j][e.i][e.color] = false;
   M->used[e.i][e.j][e.color] = false;
 }
 
@@ -323,4 +325,10 @@ ind_set max_ind_set(graph* G, int k) {
       update_ind_set(&J, &M1, &M2, P);
   }
   return J;
+}
+
+vector<graph> tree_vector_from_ind_set(ind_set* J, int k) {
+  vector<graph> LT;
+
+  return LT;
 }

@@ -93,4 +93,6 @@ ind_set max_ind_set(graph*, int);
 
 void print_ind_set(ind_set*);
 
+vector<graph> tree_vector_from_ind_set(ind_set*, int);
+
 #endif
