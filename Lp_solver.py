@@ -38,6 +38,23 @@ def rand_connected_graph():
         G = rand_graph()
     return G
 
+def read_problem():
+    myfile = open("temp.txt", "r")
+    problem = myfile.readlines()
+    n = int(problem[0])
+    s = int(problem[1])
+    t = int(problem[2])
+    G = [[int(s) for s in problem[i].split(',')[:-1]] for i in range(3, n+3)]
+    myfile.close()
+    return n, s, t, G
+
+n, s, t, G = read_problem()
+'''
+print("G= ", G)
+print("s,t = ", s,t)
+print("")
+'''
+
 def make_sets():
     edges = set()
     flow_v = set()
@@ -67,13 +84,6 @@ def delta_minus(v):
         if G[a][v] > 0:
             res.add((a,v))
     return res
-
-G = rand_connected_graph()
-'''
-print("G= ", G)
-print("s,t = ", s,t)
-print("")
-'''
 
 edges, flow_v, flow_t = make_sets()
 
@@ -165,9 +175,6 @@ def from_variables_to_graph(variables):
 
 def store_graph(G):
     f = open("temp.txt", "w")
-    f.write(str(n)+"\n")
-    f.write(str(s)+"\n")
-    f.write(str(t)+"\n")
     for l in G:
         for c in l:
             f.write(str(c)+"\n")

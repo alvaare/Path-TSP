@@ -314,7 +314,6 @@ ind_set max_ind_set(graph* G, int k) {
   ind_set J;
   graphic_m M1(n,k);
   part_m M2(n,k,G);
-  int i=0;
   while(true) {
     digraph DG = const_digraph(&M1, &M2, &J, G, k);
     dipath P = find_dipath(&DG);

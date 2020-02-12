@@ -3,6 +3,6 @@
 
 #include"graph.hpp"
 
-LP_solution get_solution();
+LP_solution get_solution(graph*, int, int);
 
 #endif
