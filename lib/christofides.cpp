@@ -51,20 +51,10 @@ graph union_tree_matching(graph* T, matching* M, vector<int> O) {
 path christofides(graph* G, graph* T, int s, int t) {
   int n = G->n;
   vector<int> O = nodes_uncomplete(T, s, t);
-  /*
-  for (int i=0; i<(int)O.size(); i++) {
-    cout << O[i] << " ";
-  }
-  cout << "\n";
-  */
   graph S = induced_subgraph(G, O);
-  //print_graph(&S);
   matching M = mw_perfect_matching(&S);
-  //print_matching(&M);
   graph E = union_tree_matching(T, &M, O);
-  //print_graph(&E);
   circuit C = euler_circuit(&E, s, t);
-  //print_circuit(&C);
   path P = clean_circuit(&C, n, t);
   print_path(&P);
 
