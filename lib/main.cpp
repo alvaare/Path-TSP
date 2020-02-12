@@ -15,5 +15,8 @@ int main() {
   graph G = from_LP_solution_to_graph(&x, k);
   print_graph(&G);
   ind_set A = max_ind_set(&G, k);
+  cout << "END OF MAX_IND_SET\n";
+  cout << "k: " << k << "\n";
+  print_graph(&G);
   print_ind_set(&A);
 }

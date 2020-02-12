@@ -46,9 +46,15 @@ struct graphic_m{
     }
   }
   ~graphic_m() {
+    bool freed[n][k] = {false};
     for (int i=0; i<n; i++) {
       for (int j=0; j<k; j++)
-        delete this->set_of_node[i][j];
+        if (!freed[i][j]) {
+          set<node> s = *(set_of_node[i][j]);
+          for (set<node>::iterator it=s.begin(); it!=s.end(); it++)
+            freed[it->id][it->id_k] = true;
+          delete this->set_of_node[i][j];
+        }
       delete [] this->set_of_node[i];
     }
     delete [] this->set_of_node;
